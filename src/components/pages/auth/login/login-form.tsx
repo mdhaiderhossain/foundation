@@ -44,27 +44,24 @@ export default function LoginForm({
     const router = useRouter();
 
     async function onSubmit(values: z.infer<typeof loginFormSchema>) {
-        try {
-            setIsLoading(true);
+        setIsLoading(true);
 
-            await signIn(values);
+        const result = await signIn(values);
 
-            toast.success("Login successful", {
+        if (!result.success) {
+            toast.error(result.error, {
                 richColors: true,
             });
-
-            form.reset();
-
-            router.push("/dashboard");
-        } catch (error) {
-            if (error instanceof Error) {
-                toast.error(error.message, {
-                    richColors: true,
-                });
-            }
-        } finally {
             setIsLoading(false);
+            return;
         }
+
+        toast.success("Login successful", {
+            richColors: true,
+        });
+        setIsLoading(false);
+        form.reset();
+        router.push("/dashboard");
     }
     return (
         <Card {...props}>

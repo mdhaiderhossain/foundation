@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { signUp } from "@/app/actions/auth.action";
 import { singupFormSchema } from "@/schemas/auth.schema";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function SignupForm({
     ...props
@@ -42,25 +43,26 @@ export default function SignupForm({
         },
     });
 
-    async function onSubmit(values: z.infer<typeof singupFormSchema>) {
-        try {
-            setIsLoading(true);
-            await signUp(values);
+    const router = useRouter();
 
-            toast.success("Account created successfully", {
+    async function onSubmit(values: z.infer<typeof singupFormSchema>) {
+        setIsLoading(true);
+        const result = await signUp(values);
+
+        if (!result.success) {
+            toast.error(result.error, {
                 richColors: true,
             });
-
-            form.reset();
-        } catch (error) {
-            if (error instanceof Error) {
-                toast.error(error.message, {
-                    richColors: true,
-                });
-            }
-        } finally {
             setIsLoading(false);
+            return;
         }
+
+        toast.success("Admin created successfully", {
+            richColors: true,
+        });
+        setIsLoading(false);
+        form.reset();
+        router.push("/login");
     }
     return (
         <Card {...props}>
