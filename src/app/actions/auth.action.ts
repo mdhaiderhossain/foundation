@@ -1,13 +1,13 @@
 "use server";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { loginFormSchema, singupFormSchema } from "@/schemas/auth.schema";
 import { headers } from "next/headers";
+import z from "zod";
 
 // SIGNUP
-export const signUp = async (values: FormData) => {
-    const name = values.get("name") as string;
-    const email = values.get("email") as string;
-    const password = values.get("password") as string;
+export const signUp = async (values: z.infer<typeof singupFormSchema>) => {
+    const { name, email, password } = values;
 
     const isAlreadyExist = await prisma.user.count();
 
@@ -26,9 +26,8 @@ export const signUp = async (values: FormData) => {
 };
 
 // SIGNIN
-export const signIn = async (values: FormData) => {
-    const email = values.get("email") as string;
-    const password = values.get("password") as string;
+export const signIn = async (values: z.infer<typeof loginFormSchema>) => {
+    const { email, password } = values;
 
     await auth.api.signInEmail({
         body: {

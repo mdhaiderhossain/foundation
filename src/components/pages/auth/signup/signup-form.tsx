@@ -23,31 +23,17 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-import { signUp } from "@/app/actions/auth";
-
-const formSchema = z
-    .object({
-        name: z
-            .string()
-            .min(2, "Name must be at least 2 characters")
-            .max(50, "Name cannot exceed 50 characters"),
-        email: z.email("Please enter a valid email address"),
-        password: z
-            .string()
-            .min(8, "Password must be at least 8 characters long"),
-        confirmPassword: z.string().min(8, "Please confirm your password"),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        message:
-            "Passwords do not match. Please ensure both fields are identical.",
-        path: ["confirmPassword"],
-    });
+import { signUp } from "@/app/actions/auth.action";
+import { singupFormSchema } from "@/schemas/auth.schema";
+import { useState } from "react";
 
 export default function SignupForm({
     ...props
 }: React.ComponentProps<typeof Card>) {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const form = useForm<z.infer<typeof singupFormSchema>>({
+        resolver: zodResolver(singupFormSchema),
         defaultValues: {
             name: "",
             email: "",
@@ -56,14 +42,10 @@ export default function SignupForm({
         },
     });
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof singupFormSchema>) {
         try {
-            const formData = new FormData();
-            formData.append("name", values.name);
-            formData.append("email", values.email);
-            formData.append("password", values.password);
-
-            await signUp(formData);
+            setIsLoading(true);
+            await signUp(values);
 
             toast.success("Account created successfully", {
                 richColors: true,
@@ -76,6 +58,8 @@ export default function SignupForm({
                     richColors: true,
                 });
             }
+        } finally {
+            setIsLoading(false);
         }
     }
     return (
@@ -95,10 +79,7 @@ export default function SignupForm({
                                     <FormItem>
                                         <FormLabel>Full Name</FormLabel>
                                         <FormControl>
-                                            <Input
-                                                placeholder="shadcn"
-                                                {...field}
-                                            />
+                                            <Input {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -154,8 +135,14 @@ export default function SignupForm({
                             />
                             <FieldGroup>
                                 <Field>
-                                    <Button type="submit">
-                                        Create Account
+                                    <Button
+                                        type="submit"
+                                        disabled={isLoading}
+                                        aria-disabled={isLoading}
+                                    >
+                                        {isLoading
+                                            ? "Creating..."
+                                            : "Create Account"}
                                     </Button>
                                     <FieldDescription className="px-6 text-center">
                                         Already have an account?{" "}

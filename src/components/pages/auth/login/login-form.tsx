@@ -23,19 +23,18 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-import { signIn } from "@/app/actions/auth";
+import { signIn } from "@/app/actions/auth.action";
 import { useRouter } from "next/navigation";
-
-const formSchema = z.object({
-    email: z.email("Please enter a valid email address"),
-    password: z.string().min(1, "Password is required"),
-});
+import { useState } from "react";
+import { loginFormSchema } from "@/schemas/auth.schema";
 
 export default function LoginForm({
     ...props
 }: React.ComponentProps<typeof Card>) {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const form = useForm<z.infer<typeof loginFormSchema>>({
+        resolver: zodResolver(loginFormSchema),
         defaultValues: {
             email: "",
             password: "",
@@ -44,13 +43,11 @@ export default function LoginForm({
 
     const router = useRouter();
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof loginFormSchema>) {
         try {
-            const formData = new FormData();
-            formData.append("email", values.email);
-            formData.append("password", values.password);
+            setIsLoading(true);
 
-            await signIn(formData);
+            await signIn(values);
 
             toast.success("Login successful", {
                 richColors: true,
@@ -65,6 +62,8 @@ export default function LoginForm({
                     richColors: true,
                 });
             }
+        } finally {
+            setIsLoading(false);
         }
     }
     return (
@@ -114,7 +113,13 @@ export default function LoginForm({
                             />
                             <FieldGroup>
                                 <Field>
-                                    <Button type="submit">Login</Button>
+                                    <Button
+                                        type="submit"
+                                        disabled={isLoading}
+                                        aria-disabled={isLoading}
+                                    >
+                                        {isLoading ? "Logging in..." : "Login"}
+                                    </Button>
                                     <FieldDescription className="px-6 text-center">
                                         Don&apos;t have an account?{" "}
                                         <Link href="/signup">Sign up</Link>
