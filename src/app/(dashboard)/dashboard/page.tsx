@@ -1,10 +1,5 @@
-"use client";
-import { signOut } from "@/app/actions/auth.action";
+import DashboardInterface from "@/components/pages/dashboard/home/dashboard-interface";
 
 export default function Dashboard() {
-    return (
-        <>
-            <button onClick={() => signOut()}>Sign out</button>
-        </>
-    );
+    return <DashboardInterface />;
 }

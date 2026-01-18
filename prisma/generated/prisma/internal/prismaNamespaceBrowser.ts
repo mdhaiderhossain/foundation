@@ -54,7 +54,13 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Domain: 'Domain',
+  DomainIdea: 'DomainIdea',
+  BrandingPackage: 'BrandingPackage',
+  Report: 'Report',
+  Offer: 'Offer',
+  Consultation: 'Consultation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -129,6 +135,89 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const DomainScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  buyNowPrice: 'buyNowPrice',
+  minOfferPrice: 'minOfferPrice',
+  industries: 'industries',
+  keywords: 'keywords',
+  isFeatured: 'isFeatured',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DomainScalarFieldEnum = (typeof DomainScalarFieldEnum)[keyof typeof DomainScalarFieldEnum]
+
+
+export const DomainIdeaScalarFieldEnum = {
+  id: 'id',
+  domainId: 'domainId',
+  title: 'title',
+  preview: 'preview',
+  content: 'content'
+} as const
+
+export type DomainIdeaScalarFieldEnum = (typeof DomainIdeaScalarFieldEnum)[keyof typeof DomainIdeaScalarFieldEnum]
+
+
+export const BrandingPackageScalarFieldEnum = {
+  id: 'id',
+  domainId: 'domainId',
+  title: 'title',
+  content: 'content',
+  price: 'price'
+} as const
+
+export type BrandingPackageScalarFieldEnum = (typeof BrandingPackageScalarFieldEnum)[keyof typeof BrandingPackageScalarFieldEnum]
+
+
+export const ReportScalarFieldEnum = {
+  id: 'id',
+  domainId: 'domainId',
+  title: 'title',
+  fileUrl: 'fileUrl',
+  previewText: 'previewText'
+} as const
+
+export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
+
+
+export const OfferScalarFieldEnum = {
+  id: 'id',
+  domainId: 'domainId',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  amount: 'amount',
+  status: 'status',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type OfferScalarFieldEnum = (typeof OfferScalarFieldEnum)[keyof typeof OfferScalarFieldEnum]
+
+
+export const ConsultationScalarFieldEnum = {
+  id: 'id',
+  offerId: 'offerId',
+  scheduled: 'scheduled',
+  completed: 'completed',
+  followUpDelivered: 'followUpDelivered',
+  notes: 'notes',
+  deckWriting: 'deckWriting',
+  productBuild: 'productBuild',
+  referrals: 'referrals',
+  investorIntros: 'investorIntros',
+  revenueShare: 'revenueShare'
+} as const
+
+export type ConsultationScalarFieldEnum = (typeof ConsultationScalarFieldEnum)[keyof typeof ConsultationScalarFieldEnum]
 
 
 export const SortOrder = {

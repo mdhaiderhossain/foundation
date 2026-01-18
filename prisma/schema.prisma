@@ -75,3 +75,90 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+enum STATUS {
+  available
+  sold
+}
+
+model Domain {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  description   String?
+  buyNowPrice   Int?
+  minOfferPrice Int?
+  industries    String[]
+  keywords      String[]
+  isFeatured    Boolean  @default(false)
+  status        STATUS   @default(available)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  ideas            DomainIdea[]
+  brandingPackages BrandingPackage[]
+  reports          Report[]
+  offers           Offer[]
+}
+
+model DomainIdea {
+  id       String @id @default(cuid())
+  domainId String
+  title    String
+  preview  String
+  content  String
+
+  domain Domain @relation(fields: [domainId], references: [id], onDelete: Cascade)
+}
+
+model BrandingPackage {
+  id       String @id @default(cuid())
+  domainId String
+  title    String
+  content  String
+  price    Int
+
+  domain Domain @relation(fields: [domainId], references: [id], onDelete: Cascade)
+}
+
+model Report {
+  id          String  @id @default(cuid())
+  domainId    String
+  title       String
+  fileUrl     String
+  previewText String?
+
+  domain Domain @relation(fields: [domainId], references: [id], onDelete: Cascade)
+}
+
+model Offer {
+  id        String   @id @default(cuid())
+  domainId  String
+  name      String
+  email     String
+  phone     String?
+  amount    Int
+  status    String   @default("New")
+  notes     String?
+  createdAt DateTime @default(now())
+
+  domain       Domain        @relation(fields: [domainId], references: [id])
+  consultation Consultation?
+}
+
+model Consultation {
+  id                String  @id @default(cuid())
+  offerId           String  @unique
+  scheduled         Boolean @default(false)
+  completed         Boolean @default(false)
+  followUpDelivered Boolean @default(false)
+  notes             String?
+
+  deckWriting    Boolean @default(false)
+  productBuild   Boolean @default(false)
+  referrals      Boolean @default(false)
+  investorIntros Boolean @default(false)
+  revenueShare   Int?
+
+  offer Offer @relation(fields: [offerId], references: [id], onDelete: Cascade)
+}

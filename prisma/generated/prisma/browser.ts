@@ -37,3 +37,33 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model Domain
+ * 
+ */
+export type Domain = Prisma.DomainModel
+/**
+ * Model DomainIdea
+ * 
+ */
+export type DomainIdea = Prisma.DomainIdeaModel
+/**
+ * Model BrandingPackage
+ * 
+ */
+export type BrandingPackage = Prisma.BrandingPackageModel
+/**
+ * Model Report
+ * 
+ */
+export type Report = Prisma.ReportModel
+/**
+ * Model Offer
+ * 
+ */
+export type Offer = Prisma.OfferModel
+/**
+ * Model Consultation
+ * 
+ */
+export type Consultation = Prisma.ConsultationModel
